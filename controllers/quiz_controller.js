@@ -14,3 +14,8 @@ exports.answer = function(req, res) {
 		res.render('quizes/answer', {respuesta: 'Incorrecto'});
 	}
 };
+
+// Author
+exports.author = function(req, res) {
+	res.render('author', {author: 'Créditos'});
+};
