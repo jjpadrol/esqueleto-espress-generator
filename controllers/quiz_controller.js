@@ -18,8 +18,14 @@ exports.load = function (req, res, next, quizId) {
 };
 
 // GET /quizes
-exports.index = function (req, res) {
-	models.Quiz.findAll().then(function(quizes){
+exports.index = function (req, res, next) {
+	var busqueda="%";
+	if (req.query.search != undefined) {
+		busqueda = "%" + req.query.search.trim() + "%";
+		busqueda = busqueda.replace(/\s/g,"%");
+	}
+
+	models.Quiz.findAll({where:["pregunta like ?", busqueda], order:'pregunta ASC'}).then(function(quizes){
 		res.render('quizes/index.ejs', { quizes: quizes});
 	}
 	).catch(function(error) {next(error)});
