@@ -36,6 +36,30 @@ app.use(function(req, res, next) {
 
     //Hacer visible req.session en las vistas
     res.locals.session = req.session;
+    //guardo el incio de sesión
+    if (req.session.user) //control de inactividad mientras se este logeado
+    {
+        if (req.session.startSession) //si se ha iniciado sessión de tiempo comprobamos su actividad:
+        {
+            var sessionActive = (new Date().getTime() - req.session.startSession) / 1000;
+            //console.log("tiempo activo:" + sessionActive + " usuario:" + req.session.user.username);
+            if (sessionActive > 10) //si supera el tiempo desconectamos sessión
+            {
+                req.session.autoLogout = true;
+                delete req.session.startSession;
+                //lo he comentado y puesto con un if en el logout porque sino al logear de nuevo se pierde la ultima pagina
+                //req.session.redir = "/login"; //preparamos dirección a cargar despues de logout para ver mensaje de inactividad
+                res.redirect("/logout");
+            }
+            else
+            {
+               req.session.startSession = new Date().getTime(); //reinicializamos tiempo de session activa
+               req.session.autoLogout = false;
+               //console.log("reinicado tiempo actividad");
+            }
+            res.locals.session = req.session; //updatamos variables locales para mostrar mensaje inactividad
+        }
+    }
     next();
 });
 

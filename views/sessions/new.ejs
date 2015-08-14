@@ -1,5 +1,10 @@
 <h2>Login</h2>
 
+<% if (session.autoLogout){%>
+	<p><strong>El usuario se ha desconectado automáticamente por inactividad superior a 2 minutos!</strong></p>
+	<% session.autoLogout = false %> 
+<%}%>
+
 <form method='POST' action='/login'>
 
 	<div class="field">

@@ -33,7 +33,10 @@ exports.create = function(req, res) {
 		// Crear req.session.user y guardar campos id y username
 		// La sesión se define por la existencia de: req.session.user
 		req.session.user = {id:user.id, username:user.username};
-
+		// variables de control de inactividad de sessión
+		req.session.startSession = new Date().getTime(); //reiniciamos tiempo de sesión activa
+		req.session.autoLogout = false; 
+		//console.log("inicio de session a las "+req.session.startSession);
 		res.redirect(req.session.redir.toString()); //redirección a path anterior a login
 	});
 };
@@ -41,6 +44,14 @@ exports.create = function(req, res) {
 // DELETE /logout -- Destruir sesion
 exports.destroy = function (req, res) {
 	delete req.session.user;
-	res.redirect(req.session.redir.toString()); //redirect a path anterior a login
+	delete req.session.startSession;
+	if(req.session.autoLogout)
+	{
+		res.redirect('/login');
+	}
+	else
+	{
+		res.redirect(req.session.redir.toString()); //redirect a path anterior a login
+	}
 
 };
