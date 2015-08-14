@@ -43,7 +43,7 @@ app.use(function(req, res, next) {
         {
             var sessionActive = (new Date().getTime() - req.session.startSession) / 1000;
             //console.log("tiempo activo:" + sessionActive + " usuario:" + req.session.user.username);
-            if (sessionActive > 10) //si supera el tiempo desconectamos sessión
+            if (sessionActive > 120) //si supera el tiempo desconectamos sessión
             {
                 req.session.autoLogout = true;
                 delete req.session.startSession;
